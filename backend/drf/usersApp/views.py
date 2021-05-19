@@ -79,6 +79,11 @@ class RegisterAPI(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
 
         password = request.data['password']
+        email = request.data['email']
+        print("email", email)
+        listUsersEmail = User.objects.all().filter(email=email)
+        if len(listUsersEmail) != 0:
+            return Response({"email": ["A user with that email already exists."]}, status=HTTP_400_BAD_REQUEST)
         # password2 = request.data['password2']
         # if password != password2:
         #     raise serializers.ValidationError({'msg':'Passowrd must match.'})

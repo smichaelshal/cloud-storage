@@ -15,8 +15,6 @@ import os
 from decouple import config
 EMAIL_HOST_USER = config('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')
-print('EMAIL_HOST_USER', EMAIL_HOST_USER)
-print('EMAIL_HOST_PASSWORD', EMAIL_HOST_PASSWORD)
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
