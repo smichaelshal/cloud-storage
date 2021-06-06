@@ -75,7 +75,7 @@ const createWindow = async () => {
   win = new BrowserWindow({
     width: 800,
     height: 600,
-    minWidth:800,
+    minWidth: 800,
     minHeight: 600,
     // icon: __dirname + '/i1.icns',
     // title: 'mmm',
@@ -159,7 +159,19 @@ if (isDevelopment) {
 const openFile = () => {
   dialog
     .showOpenDialog(win, {
-      properties: ["openFile", "openDirectory", "multiSelections"],
+      properties: ["openFile", "multiSelections"],
+    })
+    .then((files) => {
+      const CHANNEL = "main";
+      files.filePaths.forEach((path) => {
+        win.webContents.send(CHANNEL, path);
+      });
+    });
+};
+const openDirectory = () => {
+  dialog
+    .showOpenDialog(win, {
+      properties: ["openDirectory"],
     })
     .then((files) => {
       const CHANNEL = "main";
@@ -174,6 +186,10 @@ const MESSAGE = "pong";
 
 ipcMain.on("openFile", (event, data) => {
   openFile();
+});
+
+ipcMain.on("openDirectory", (event, data) => {
+  openDirectory();
 });
 
 ipcMain.on("menu", (event, data) => {
@@ -226,7 +242,7 @@ import { uploadFileFromClient } from "./uploadServer";
 import { downloadFileFromClient } from "./downloadServer";
 
 const HOST = "http://localhost:8000/";
-const HOST_WS = 'ws://localhost:8000/';
+const HOST_WS = "ws://localhost:8000/";
 
 // appExpress.post("/upload/", (req, res) => {
 //   const RES_DATA = req.body.data;
@@ -236,11 +252,11 @@ const HOST_WS = 'ws://localhost:8000/';
 // });
 
 ipcMain.on("uploadChannel", (event, data) => {
-  const RES_DATA = data.data
+  const RES_DATA = data.data;
   uploadFileFromClient(RES_DATA);
 });
 ipcMain.on("downloadChannel", (event, data) => {
-  const RES_DATA = data.data
+  const RES_DATA = data.data;
   downloadFileFromClient(RES_DATA);
 });
 
