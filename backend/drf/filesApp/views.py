@@ -458,6 +458,14 @@ class DeleteObject(generics.GenericAPIView):
                 "listFiles": []
             }
             return Response(retData, status=HTTP_200_OK)
+
+        # ??? 16-6-2021 << 
+        # if objDirectry.user_upload != user:
+        #     retData = {
+        #         'permission': 'There is no permission to delete this object'
+        #     }
+        #     return Response(retData, status=HTTP_400_BAD_REQUEST)
+        # ??? 16-6-2021 >> 
         try:
             if isDirectory == '1':
                 pathSource = request.data["data"]['pathSource']
@@ -545,10 +553,43 @@ def addObjectToUser(listUsers, objectToAdd, isFile):
         # except:
         #     print('g2')
         for user in listUsers:
-            user.profile.root_directory.files.add(objectToAdd)
+            tempFile = File()
+            tempFile.name_file = objectToAdd.name_file
+            tempFile.type_file = objectToAdd.type_file
+            tempFile.size_file = objectToAdd.size_file
+            tempFile.user_upload = objectToAdd.user_upload
+            tempFile.seek_file = objectToAdd.seek_file
+            tempFile.pathDestination = objectToAdd.pathDestination
+            tempFile.pathSource = objectToAdd.pathSource
+            tempFile.id_file = objectToAdd.id_file
+            # permission_file
+            # created_date
+            #upload_date
+            #download_date
+            #changed_date
+            tempFile.save()
+            user.profile.root_directory.files.add(tempFile) # 16-6-2021 <<<<=
+            # user.profile.root_directory.files.add(objectToAdd)
     else:
+        tempDirectory = Directory()
+        tempDirectory.name_directory = objectToAdd.name_directory
+        tempDirectory.size_directory = objectToAdd.size_directory
+        tempDirectory.user_upload = objectToAdd.user_upload
+        tempDirectory.id_directory = objectToAdd.id_directory
+        tempDirectory.files = objectToAdd.files
+        tempDirectory.directories = objectToAdd.directories
+        tempDirectory.pathDestination = objectToAdd.pathDestination
+        tempDirectory.pathSource = objectToAdd.pathSource
+        tempDirectory.save()
+         # permission_file
+        # created_date
+        #upload_date
+        #download_date
+        #changed_date
+
         for user in listUsers:
-            user.profile.root_directory.directories.add(objectToAdd)
+            user.profile.root_directory.directories.add(tempDirectory) # 16-6-2021
+            # user.profile.root_directory.directories.add(objectToAdd)
 
 
 class GetIdsUsers(generics.GenericAPIView):
