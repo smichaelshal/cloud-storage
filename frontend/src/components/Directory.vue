@@ -11,7 +11,6 @@
               <i v-if="usernameUpload != getUsername" class="el-icon-share" style="font-size: 1rem;"></i>
 
             </span>
-            <div v-if="usernameUpload != getUsername">@</div>
         </div>
         <div class="text item">
             <!-- {{name}} -->
