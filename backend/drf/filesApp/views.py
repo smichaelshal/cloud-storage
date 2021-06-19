@@ -239,6 +239,7 @@ class GetListFilesDirectories(generics.GenericAPIView):
                 "nameFile": file.name_file,
                 "typeFile": file.type_file,
                 "sizeFile": file.size_file,
+                "username": file.user_upload.username,
             })
 
         retData = {
@@ -311,6 +312,7 @@ class GetListDirectoriesApi(generics.GenericAPIView):
                 "name_directory": directory.name_directory,
                 "size_directory": directory.size_directory,
                 "pathDestination": directory.pathDestination,
+                "username": directory.user_upload.username,
             })
 
         retData = {
