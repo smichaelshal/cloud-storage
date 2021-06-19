@@ -8,7 +8,10 @@
         <div slot="header" class="clearfix">
             <span>
               <i class="el-icon-folder" style="font-size: 2rem;"></i>
+              <i v-if="usernameUpload != getUsername" class="el-icon-share" style="font-size: 1rem;"></i>
+
             </span>
+            <div v-if="usernameUpload != getUsername">@</div>
         </div>
         <div class="text item">
             <!-- {{name}} -->
@@ -24,13 +27,14 @@ import { mapGetters, mapMutations} from 'vuex';
 
 export default {
   name: 'Directory',
-  props: ['name', 'size', 'path'],
+  props: ['name', 'size', 'path', 'usernameUpload'],
     computed: {
     ...mapGetters([
         'getListSelectedDirectories',
         'getListSelectedLengthDirectories',
         'getPathNow',
-        'getListSelectedLength'
+        'getListSelectedLength',
+        'getUsername',
         
     ]),
   },
@@ -53,7 +57,8 @@ export default {
         this.setListSelectedLength(this.getListSelectedLength + 1);
 
         this.getListSelectedDirectories[this.path.toString()] = {
-          "name": this.name,          
+          "name": this.name,
+          "usernameUpload": this.usernameUpload,
         };
       }else{
         delete this.getListSelectedDirectories[this.path];

@@ -9,6 +9,7 @@
        <div slot="header" class="clearfix">
             <span>
               <i class="el-icon-document" style="font-size: 2rem;"></i>
+              <i v-if="usernameUpload != getUsername" class="el-icon-share" style="font-size: 1.2rem;"></i>
             </span>
         </div>
         
@@ -26,7 +27,7 @@ import { mapGetters, mapMutations} from 'vuex';
 
 export default {
   name: 'File',
-  props: ['name', 'type', 'id','size'],
+  props: ['name', 'type', 'id','size', 'usernameUpload'],
   data(){
     return {
       nameView: null,
@@ -42,6 +43,7 @@ export default {
         'getListSelected',
         'getListSelectedLength',
         'getPathNow',
+        'getUsername',
     ]),
   },
   methods: {
@@ -70,7 +72,7 @@ export default {
           "name": this.name,
           "type": this.type,
           "size": this.size,
-          
+          "usernameUpload": this.usernameUpload,     
         };
 
       }else{

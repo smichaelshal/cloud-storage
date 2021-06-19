@@ -46,7 +46,7 @@
       >
     </div>
     <div v-if="waitVar">
-      Please Wait
+      <i class="el-icon-loading" style="font-size: 2rem;"></i>
     </div>
   </div>
 </template>

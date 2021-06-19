@@ -14,7 +14,7 @@
         <el-button style="margin-bottom: 10px;" @click="downloadObjects">Download</el-button>
       </div>
 
-      <div v-if="getLengthObject(getListSelectedDirectories) + getLengthObject(getListSelected) === 1">
+      <div v-if="(getLengthObject(getListSelectedDirectories) + getLengthObject(getListSelected) === 1) && checkUserUpload()">
         <el-button style="margin-bottom: 10px;" @click="changeNameOpen = true">Change Name</el-button>
       </div>
 
@@ -101,6 +101,7 @@ export default {
         'getIsChangeDataToSendWs',
         'getIdUser',
         'getHost',
+        'getUsername',
     ]),
   },
   methods: {
@@ -249,6 +250,22 @@ axios.post(url, body, config)
 
       return sumFiled;
 
+    },
+
+    checkUserUpload(){
+      for (let path in this.getListSelectedDirectories){
+        if(this.getListSelectedDirectories[path].usernameUpload != this.getUsername){
+          return false;
+        }
+      }
+
+      for (let idFile in this.getListSelected){
+        if(this.getListSelected[idFile].usernameUpload != this.getUsername){
+          return false;
+        }
+      }
+
+      return true;
     },
   sendDownloadFile(id, name, type){
     

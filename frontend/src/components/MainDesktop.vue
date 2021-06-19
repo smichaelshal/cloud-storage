@@ -66,6 +66,7 @@
         :name="directory.name_directory"
         :size="directory.size_directory"
         :path="directory.pathDestination"
+        :usernameUpload="directory.username"
       />
 
       <File
@@ -76,6 +77,7 @@
         :type="file.typeFile"
         :id="file.idFile"
         :size="file.sizeFile"
+        :usernameUpload="file.username"
       />
     </div>
   </div>
