@@ -5,6 +5,8 @@ const fs = require("fs");
 import { log } from "console";
 import { HOST } from "./background";
 import { HOST_WS } from "./background";
+import { win } from "./background";
+
 
 let timerID_Download = null;
 let listDownload = [];
@@ -145,6 +147,9 @@ const manageDownload = () => {
   if (listDownload.length != 0 && listDownloadNow.length == 0) {
     listDownloadNow.push(listDownload.shift());
     //.replaceAll('//', '/')
+    console.log('start download');
+    win.webContents.send('upload-datas', 'start-download')
+
 
     let token = listDownloadNow[0].token;
     let pathSource = listDownloadNow[0].pathSource;
@@ -163,6 +168,10 @@ const manageDownload = () => {
     );
   } else if (listDownload.length == 0 && listDownloadNow.length == 0) {
     clearInterval(timerID_Download);
+    console.log('end download');
+    win.webContents.send('upload-datas', 'end-download')
+
+
   }
 };
 

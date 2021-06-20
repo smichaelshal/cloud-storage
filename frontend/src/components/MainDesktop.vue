@@ -2,10 +2,15 @@
   <div class="main-desktop">
     Username: {{ getUsername }}
 
-    <span v-if="isUpload">
-    <span>Is Upload Now </span>
+    <div v-if="isUpload">
+      <span>Upload Now </span>
       <i class="el-icon-loading" style="font-size: 2rem;"></i>
-    </span>
+    </div>
+
+    <div v-if="isDownload">
+      <span>Download Now </span>
+      <i class="el-icon-loading" style="font-size: 2rem;"></i>
+    </div>
 
     <div style="margin-top: 20px; margin-bottom: 20px;">
       <UploadFile :pathNow="pathNow" style="margin-bottom: 10px;" />
@@ -129,6 +134,7 @@ export default {
       isDirectory: null,
       isClickRight: false,
       isUpload: false,
+      isDownload: false,
     };
   },
   computed: {
@@ -284,15 +290,17 @@ export default {
   // },
   // create(){
     const _this = this;
-    console.log('d')
     ipcRenderer.on("upload-datas", (event, data) => {
-      console.log('c')
+
       if (data === "start-upload") {
         _this.isUpload = true;
-        console.log('a')
       } else if (data === "end-upload") {
         _this.isUpload = false;
-        console.log('b')
+      } else if (data === "start-download") {
+        _this.isDownload = true;
+      }
+       else if (data === "end-download") {
+        _this.isDownload = false;
       }
     });
   },
