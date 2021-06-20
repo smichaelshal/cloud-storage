@@ -1,6 +1,12 @@
 <template>
   <div class="main-desktop">
     Username: {{ getUsername }}
+
+    <span v-if="isUpload">
+    <span>Is Upload Now </span>
+      <i class="el-icon-loading" style="font-size: 2rem;"></i>
+    </span>
+
     <div style="margin-top: 20px; margin-bottom: 20px;">
       <UploadFile :pathNow="pathNow" style="margin-bottom: 10px;" />
 
@@ -84,6 +90,7 @@
 </template>
 
 <script>
+const { ipcRenderer } = require("electron");
 import File from "@/components/File.vue";
 import Directory from "@/components/Directory.vue";
 import UploadFile from "@/components/UploadFile.vue";
@@ -121,6 +128,7 @@ export default {
       downloadPathDirectory: null,
       isDirectory: null,
       isClickRight: false,
+      isUpload: false,
     };
   },
   computed: {
@@ -273,6 +281,20 @@ export default {
   },
   mounted: function() {
     this.getLists("/");
+  // },
+  // create(){
+    const _this = this;
+    console.log('d')
+    ipcRenderer.on("upload-datas", (event, data) => {
+      console.log('c')
+      if (data === "start-upload") {
+        _this.isUpload = true;
+        console.log('a')
+      } else if (data === "end-upload") {
+        _this.isUpload = false;
+        console.log('b')
+      }
+    });
   },
 };
 

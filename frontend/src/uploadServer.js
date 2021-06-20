@@ -17,6 +17,7 @@ let sizeFileUpload = null;
 let listUpload = [];
 let listUploadNow = [];
 let timerID = null;
+let isUpload = false
 
 // constants
 const TIME_TO_LOOP = 1000;
@@ -144,8 +145,15 @@ const uploadFile = (token, pathSource, pathDestination, modeUpload) => {
 //---------------------------------------------------------------------
 
 const manageUpload = () => {
+  // if (isUpload){
+  //   console.log('start upload');
+  // }
   if (listUpload.length != 0 && listUploadNow.length == 0) {
     listUploadNow.push(listUpload.shift());
+    isUpload = true;
+    console.log('start upload');
+    win.webContents.send('upload-datas', 'start-upload')
+    console.log('aa');
 
     let token = listUploadNow[0].token;
     let pathSource = listUploadNow[0].pathSource;
@@ -156,6 +164,10 @@ const manageUpload = () => {
     shellUploadFile(token, pathSource, pathDestination, modeUpload);
   } else if (listUpload.length == 0 && listUploadNow.length == 0) {
     clearInterval(timerID);
+    console.log('end upload');
+    win.webContents.send('upload-datas', 'end-upload')
+    console.log('bb');
+    isUpload = false;
   }
 };
 
