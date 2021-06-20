@@ -7,6 +7,8 @@ import { HOST_WS } from "./background";
 import { win } from "./background";
 
 let modeUpload = 1;
+let sumFiles = 0;
+let sumFilesUploads = 0;
 
 let dictFilesDirectory = {};
 let listFiles = [];
@@ -38,6 +40,7 @@ const uploadFileFromClient = (RES_DATA) => {
       modeUpload: modeUpload,
     };
     listUpload.push(uploadObjectData);
+    sumFiles += 1;
 
     if (
       listUpload.length == 1 &&
@@ -128,6 +131,21 @@ const uploadFile = (token, pathSource, pathDestination, modeUpload) => {
         });
       });
 
+      ws.on("message", function incoming(data) {
+        if(data === "ACK-E"){
+          sumFilesUploads += 1
+        }
+        console.log('sumFilesUploads', sumFilesUploads);
+        
+        if(sumFilesUploads === sumFiles){
+          sumFilesUploads = 0;
+          sumFiles = 0;
+          win.webContents.send('upload-datas', 'end-upload')
+
+          console.log('yytt');
+        }
+      });
+
       ws.on("close", function close(data) {
         const flag = String.fromCharCode(data[0]);
         if (listUploadNow.length == 1) {
@@ -153,7 +171,6 @@ const manageUpload = () => {
     isUpload = true;
     console.log('start upload');
     win.webContents.send('upload-datas', 'start-upload')
-    console.log('aa');
 
     let token = listUploadNow[0].token;
     let pathSource = listUploadNow[0].pathSource;
@@ -164,10 +181,9 @@ const manageUpload = () => {
     shellUploadFile(token, pathSource, pathDestination, modeUpload);
   } else if (listUpload.length == 0 && listUploadNow.length == 0) {
     clearInterval(timerID);
-    console.log('end upload');
-    win.webContents.send('upload-datas', 'end-upload')
-    console.log('bb');
-    isUpload = false;
+    // console.log('end upload', sumFiles);
+    // win.webContents.send('upload-datas', 'end-upload')
+    // isUpload = false;
   }
 };
 
@@ -315,6 +331,7 @@ const sendAllDirectories = (
     };
     if (!isInListObjects(file, listUploadedFiles)) {
       listUpload.push(uploadObjectData);
+      sumFiles += 1;
     } else if (
       pathDestination === pathDirectoryLastFile &&
       nameLastFile === file
@@ -326,6 +343,7 @@ const sendAllDirectories = (
         modeUpload: "2", // <<2
       };
       listUpload.push(uploadObjectData);
+      sumFiles += 1;
     }
   });
 
